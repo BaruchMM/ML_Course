@@ -15,10 +15,10 @@ def compute_accuracy(true_indexes,true_centroids,indexes,centroids):
     new_indexes = reorder[indexes]
     return np.sum(true_indexes == new_indexes)/(len(indexes))*100
 
+def compute_centroids(data,indexes):
+    return np.array([np.average(data[indexes == np.unique(indexes)[i]],axis=0) for i in range(len(np.unique(indexes)))])
 
-
-
-def scatter_clusters_kmeans(clusters, centroids): 
+def scatter_clusters_kmeans(clusters, centroids):
     fig, ax= plt.subplots(figsize=(8,5), dpi=100)
     for i in range(len(clusters)):
         ax.scatter(clusters[i].T[0],clusters[i].T[1])
@@ -29,6 +29,8 @@ def cluster_scatter(data,indexes,title=""):
     for i in range(len(np.unique(indexes))):
         trues = [indexes == np.unique(indexes)[i]]
         graf_pt(data[trues])
+    centroids = compute_centroids(data,indexes)
+    plt.scatter(centroids.T[0],centroids.T[1],color="black")
     ax.set_title(title)
 
 def kmeans_gif(data,k,gif=False,gif_file_name="kmeans"):
@@ -72,12 +74,11 @@ def kmeans_gif(data,k,gif=False,gif_file_name="kmeans"):
 
 
 
-
 class MDC():
     def __init__(self,data,centroids):
         self.data = data
         self.centroids = centroids
-        dists = np.array([distance(centroids[i],data) for i in range(len(centroids))])        
+        dists = np.array([distance(centroids[i],data) for i in range(len(centroids))])
         self.indexes = np.array([int(np.argmin(dists.T[i])) for i in range(len(data))])
 
 class kmeans():
