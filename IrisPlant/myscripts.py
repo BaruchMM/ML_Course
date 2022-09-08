@@ -7,8 +7,8 @@ import os
 def distance(p,ps):
     return np.sum((ps-p)**2,axis=1)
 
-def graf_pt(data):
-    plt.scatter(data.T[0],data.T[1],alpha=0.3)
+def graf_pt(data,alpha = 0.3):
+    plt.scatter(data.T[0],data.T[1],alpha=alpha)
 
 def compute_accuracy(true_indexes,true_centroids,indexes,centroids):
     reorder = MDC(centroids,true_centroids).indexes
@@ -24,13 +24,14 @@ def scatter_clusters_kmeans(clusters, centroids):
         ax.scatter(clusters[i].T[0],clusters[i].T[1])
     ax.scatter(centroids.T[0], centroids.T[1], color="k")
 
-def cluster_scatter(data,indexes,title=""):
+def cluster_scatter(data,indexes,title="", centroids=True):
     fig, ax= plt.subplots(figsize=(8,5), dpi=100)
     for i in range(len(np.unique(indexes))):
         trues = [indexes == np.unique(indexes)[i]]
         graf_pt(data[trues])
-    centroids = compute_centroids(data,indexes)
-    plt.scatter(centroids.T[0],centroids.T[1],color="black")
+    if(centroids):
+        centroids = compute_centroids(data,indexes)
+        plt.scatter(centroids.T[0],centroids.T[1],color="black")
     ax.set_title(title)
 
 def kmeans_gif(data,k,gif=False,gif_file_name="kmeans"):
